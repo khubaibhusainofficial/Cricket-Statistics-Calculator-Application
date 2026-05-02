@@ -42,73 +42,75 @@ class _AverageTabState extends State<AverageTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          GlassCard(
-            child: Column(
-              children: [
-                _input("Runs Conceded", runsController),
-                const SizedBox(height: 12),
-                _input("Wickets", wicketsController),
-                const SizedBox(height: 20),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            GlassCard(
+              child: Column(
+                children: [
+                  _input("Runs Conceded", runsController),
+                  const SizedBox(height: 12),
+                  _input("Wickets", wicketsController),
+                  const SizedBox(height: 20),
 
-                ElevatedButton(
-                  style: _btnStyle,
-                  onPressed: () {
-                    final rc = int.tryParse(runsController.text) ?? 0;
-                    final wkt = int.tryParse(wicketsController.text) ?? 0;
-                    context.read<AvgBloc>().add(ButtonHit(runs: rc, wkts: wkt));
-                  },
-                  child: const Text("Calculate"),
-                ),
-              ],
+                  ElevatedButton(
+                    style: _btnStyle,
+                    onPressed: () {
+                      final rc = int.tryParse(runsController.text) ?? 0;
+                      final wkt = int.tryParse(wicketsController.text) ?? 0;
+                      context.read<AvgBloc>().add(ButtonHit(runs: rc, wkts: wkt));
+                    },
+                    child: const Text("Calculate"),
+                  ),
+                ],
+              ),
             ),
-          ),
 
-          const SizedBox(height: 30),
+            const SizedBox(height: 30),
 
-          BlocBuilder<AvgBloc, AvgState>(
-            builder: (context, state) {
-              return TweenAnimationBuilder<double>(
-                tween: Tween(begin: 0, end: state.average),
-                duration: const Duration(milliseconds: 600),
-                curve: Curves.decelerate,
-                builder: (context, value, _) {
-                  return Column(
-                    children: [
-                      Text(
-                        value.toStringAsFixed(2),
-                        style: const TextStyle(
-                          fontSize: 48,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+            BlocBuilder<AvgBloc, AvgState>(
+              builder: (context, state) {
+                return TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0, end: state.average),
+                  duration: const Duration(milliseconds: 600),
+                  curve: Curves.decelerate,
+                  builder: (context, value, _) {
+                    return Column(
+                      children: [
+                        Text(
+                          value.toStringAsFixed(2),
+                          style: const TextStyle(
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        "Bowler's Average",
-                        style: TextStyle(color: Colors.white70),
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-          ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          "Bowler's Average",
+                          style: TextStyle(color: Colors.white70),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
 
-          const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-          ElevatedButton(
-            onPressed: () {
-              runsController.clear();
-              wicketsController.clear();
-              context.read<AvgBloc>().add(ResetAll());
-            },
-            child: const Text("Clear All"),
-          ),
-        ],
+            ElevatedButton(
+              onPressed: () {
+                runsController.clear();
+                wicketsController.clear();
+                context.read<AvgBloc>().add(ResetAll());
+              },
+              child: const Text("Clear All"),
+            ),
+          ],
+        ),
       ),
     );
   }

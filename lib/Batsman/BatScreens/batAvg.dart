@@ -42,75 +42,77 @@ class _AverageTabState extends State<AverageTabBatsman> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          GlassCard(
-            child: Column(
-              children: [
-                _input("Runs Scored", runScoredController),
-                const SizedBox(height: 12),
-                _input("Times Dismissed", dismissController),
-                const SizedBox(height: 20),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            GlassCard(
+              child: Column(
+                children: [
+                  _input("Runs Scored", runScoredController),
+                  const SizedBox(height: 12),
+                  _input("Times Dismissed", dismissController),
+                  const SizedBox(height: 20),
 
-                ElevatedButton(
-                  style: _btnStyle,
-                  onPressed: () {
-                    final rs = int.tryParse(runScoredController.text) ?? 0;
-                    final timeWkt = int.tryParse(dismissController.text) ?? 0;
-                    context.read<AverageBatsmanBloc>().add(
-                      CalculateButton(runs: rs, dismissals: timeWkt),
+                  ElevatedButton(
+                    style: _btnStyle,
+                    onPressed: () {
+                      final rs = int.tryParse(runScoredController.text) ?? 0;
+                      final timeWkt = int.tryParse(dismissController.text) ?? 0;
+                      context.read<AverageBatsmanBloc>().add(
+                        CalculateButton(runs: rs, dismissals: timeWkt),
+                      );
+                    },
+                    child: const Text("Calculate"),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
+            BlocBuilder<AverageBatsmanBloc, AverageBatsmanState>(
+              builder: (context, state) {
+                return TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0, end: state.averageBat),
+                  duration: const Duration(milliseconds: 600),
+                  curve: Curves.decelerate,
+                  builder: (context, value, _) {
+                    return Column(
+                      children: [
+                        Text(
+                          value.toStringAsFixed(2),
+                          style: const TextStyle(
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          "Batsman's Average",
+                          style: TextStyle(color: Colors.white70),
+                        ),
+                      ],
                     );
                   },
-                  child: const Text("Calculate"),
-                ),
-              ],
+                );
+              },
             ),
-          ),
 
-          const SizedBox(height: 30),
+            const SizedBox(height: 20),
 
-          BlocBuilder<AverageBatsmanBloc, AverageBatsmanState>(
-            builder: (context, state) {
-              return TweenAnimationBuilder<double>(
-                tween: Tween(begin: 0, end: state.averageBat),
-                duration: const Duration(milliseconds: 600),
-                curve: Curves.decelerate,
-                builder: (context, value, _) {
-                  return Column(
-                    children: [
-                      Text(
-                        value.toStringAsFixed(2),
-                        style: const TextStyle(
-                          fontSize: 48,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        "Batsman's Average",
-                        style: TextStyle(color: Colors.white70),
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-          ),
-
-          const SizedBox(height: 20),
-
-          ElevatedButton(
-            onPressed: () {
-              runScoredController.clear();
-              dismissController.clear();
-              context.read<AverageBatsmanBloc>().add(ResetAllValues());
-            },
-            child: const Text("Clear All"),
-          ),
-        ],
+            ElevatedButton(
+              onPressed: () {
+                runScoredController.clear();
+                dismissController.clear();
+                context.read<AverageBatsmanBloc>().add(ResetAllValues());
+              },
+              child: const Text("Clear All"),
+            ),
+          ],
+        ),
       ),
     );
   }

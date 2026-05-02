@@ -42,75 +42,77 @@ class _EconomyTabState extends State<EconomyTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          GlassCard(
-            child: Column(
-              children: [
-                _input("Runs Conceded", runsController),
-                const SizedBox(height: 12),
-                _input("Overs", oversController),
-                const SizedBox(height: 20),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            GlassCard(
+              child: Column(
+                children: [
+                  _input("Runs Conceded", runsController),
+                  const SizedBox(height: 12),
+                  _input("Overs", oversController),
+                  const SizedBox(height: 20),
 
-                ElevatedButton(
-                  style: _btnStyle,
-                  onPressed: () {
-                    final runsC = int.tryParse(runsController.text) ?? 0;
-                    final overs = double.tryParse(oversController.text) ?? 0;
-                    context.read<EconomyBloc>().add(
-                      ButtonPress(runs: runsC, overs: overs),
+                  ElevatedButton(
+                    style: _btnStyle,
+                    onPressed: () {
+                      final runsC = int.tryParse(runsController.text) ?? 0;
+                      final overs = double.tryParse(oversController.text) ?? 0;
+                      context.read<EconomyBloc>().add(
+                        ButtonPress(runs: runsC, overs: overs),
+                      );
+                    },
+                    child: const Text("Calculate"),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
+            BlocBuilder<EconomyBloc, EconomyState>(
+              builder: (context, state) {
+                return TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0, end: state.economy),
+                  duration: const Duration(milliseconds: 600),
+                  curve: Curves.decelerate,
+                  builder: (context, value, _) {
+                    return Column(
+                      children: [
+                        Text(
+                          value.toStringAsFixed(2),
+                          style: const TextStyle(
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          "Bowler's Economy Rate",
+                          style: TextStyle(color: Colors.white70),
+                        ),
+                      ],
                     );
                   },
-                  child: const Text("Calculate"),
-                ),
-              ],
+                );
+              },
             ),
-          ),
 
-          const SizedBox(height: 30),
+            const SizedBox(height: 20),
 
-          BlocBuilder<EconomyBloc, EconomyState>(
-            builder: (context, state) {
-              return TweenAnimationBuilder<double>(
-                tween: Tween(begin: 0, end: state.economy),
-                duration: const Duration(milliseconds: 600),
-                curve: Curves.decelerate,
-                builder: (context, value, _) {
-                  return Column(
-                    children: [
-                      Text(
-                        value.toStringAsFixed(2),
-                        style: const TextStyle(
-                          fontSize: 48,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        "Bowler's Economy Rate",
-                        style: TextStyle(color: Colors.white70),
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-          ),
-
-          const SizedBox(height: 20),
-
-          ElevatedButton(
-            onPressed: () {
-              runsController.clear();
-              oversController.clear();
-              context.read<EconomyBloc>().add(ResetResult());
-            },
-            child: const Text("Clear All"),
-          ),
-        ],
+            ElevatedButton(
+              onPressed: () {
+                runsController.clear();
+                oversController.clear();
+                context.read<EconomyBloc>().add(ResetResult());
+              },
+              child: const Text("Clear All"),
+            ),
+          ],
+        ),
       ),
     );
   }

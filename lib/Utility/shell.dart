@@ -1,4 +1,5 @@
 import 'package:cricket_stats/Notes_Section/formulas.dart';
+import 'package:cricket_stats/Screens/storage.dart';
 import 'package:flutter/material.dart';
 import '../Batsman/BatHome/batHome.dart';
 import '../Screens/home_screen.dart';
@@ -131,6 +132,17 @@ class _AppShellState extends State<AppShell> {
                       onTap: () {
                         Navigator.pop(context);
                         _openScreen(const MyFormulas());
+                      },
+                    ),
+                    const SizedBox(height: 12),
+
+                    _drawerTile(
+                      icon: Icons.insights,
+                      title: "Database",
+                      subtitle: "Previous Results",
+                      onTap: () {
+                        Navigator.pop(context);
+                        _openScreen(const StatsHistoryScreen());
                       },
                     ),
                   ],
