@@ -137,7 +137,7 @@ class _AppShellState extends State<AppShell> {
                     const SizedBox(height: 12),
 
                     _drawerTile(
-                      icon: Icons.insights,
+                      icon: Icons.storage,
                       title: "Database",
                       subtitle: "Previous Results",
                       onTap: () {
